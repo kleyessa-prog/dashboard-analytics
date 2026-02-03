@@ -130,6 +130,66 @@ The dashboard expects the following backend endpoints:
 
 The API service will automatically fetch all servers (Server 1, Server 2, Server 3, Server 4) by default.
 
+## Deployment
+
+### Aptible Deployment
+
+This project is configured for automatic deployment to Aptible via GitHub Actions using the official Aptible GitHub Action.
+
+#### Prerequisites
+
+1. **Aptible Account**: Ensure you have an Aptible account and the app is created
+2. **GitHub Secrets**: Configure the following secrets in your GitHub repository
+
+#### GitHub Secrets and Variables Setup
+
+Go to your GitHub repository → Settings → Secrets and variables → Actions:
+
+**Secrets** (click "New repository secret"):
+- `APTIBLE_USERNAME`: Your Aptible email/username (required)
+- `APTIBLE_PASSWORD`: Your Aptible password (required)
+
+**Variables** (click "New repository variable"):
+- `APTIBLE_APP`: `dashboard-analytics` (required)
+- `APTIBLE_ENVIRONMENT`: `catalyze-development` (required)
+
+**Note**: Aptible recommends creating a robot user for CI/CD deployments instead of using your personal account credentials.
+
+#### Automatic Deployment
+
+The workflow (`.github/workflows/aptible.yml`) automatically:
+- Triggers on push to `main` branch
+- Uses the official Aptible GitHub Action to deploy
+- Deploys to Aptible environment `catalyze-development`
+- Can be manually triggered from the GitHub Actions tab
+
+#### Manual Deployment
+
+You can manually trigger deployment from the GitHub Actions tab by:
+1. Go to the **Actions** tab in your GitHub repository
+2. Select the **aptible** workflow
+3. Click **Run workflow**
+
+Or deploy locally using the Aptible CLI:
+
+```bash
+# Install Aptible CLI (if not already installed)
+brew install aptible/tap/aptible-cli
+
+# Login to Aptible
+aptible login
+
+# Deploy
+aptible deploy --app dashboard-analytics --environment catalyze-development
+```
+
+#### Environment Variables
+
+**Important**: Vite environment variables (`VITE_*`) are embedded at build time. To set them:
+1. Set them in Aptible using: `aptible config:set --app dashboard-analytics VITE_API_BASE_URL=...`
+2. Or configure them in the Aptible dashboard
+3. They will be available during the Docker build process
+
 ## Color Theme
 
 The dashboard uses a professional color scheme inspired by Catalyze Labs:
