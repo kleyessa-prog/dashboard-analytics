@@ -19,7 +19,7 @@ export const DonutChart = ({
   const displayValue = centerValue !== undefined ? centerValue : total;
 
   return (
-    <div className="relative" style={{ height }}>
+    <div className="relative w-full" style={{ height, minHeight: height }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
